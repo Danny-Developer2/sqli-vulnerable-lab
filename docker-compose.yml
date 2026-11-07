@@ -1,0 +1,49 @@
+services:
+  db:
+    image: mariadb:11.4
+    container_name: sqli-lab-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: root_ficticio_cambiar
+      MARIADB_DATABASE: sqli_lab
+      MARIADB_USER: lab_user
+      MARIADB_PASSWORD: lab_pass_ficticio_cambiar
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
+    networks:
+      - sqli-net
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "-proot_ficticio_cambiar"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    # Sin puertos publicados: la base de datos sólo es accesible en la red interna.
+
+  web:
+    build: .
+    container_name: sqli-lab-web
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: sqli_lab
+      DB_USER: lab_user
+      DB_PASSWORD: lab_pass_ficticio_cambiar
+      SECRET_KEY: secreto_ficticio_cambiar_en_produccion
+    ports:
+      - "127.0.0.1:8080:8080"
+    networks:
+      - sqli-net
+
+networks:
+  sqli-net:
+    driver: bridge
+
+volumes:
+  db-data:

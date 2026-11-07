@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Login seguro · SQLi Lab{% endblock %}
+{% block content %}
+<section class="card auth-card">
+  <h1>Login seguro</h1>
+  <p class="lead">
+    Este formulario usa una consulta parametrizada: la entrada se envía como parámetro
+    y no puede alterar la estructura de la sentencia SQL.
+  </p>
+
+  {% if error %}
+    <div class="alert error-box">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('auth.secure_login') }}" class="form-stack">
+    <label for="username">Usuario</label>
+    <input type="text" id="username" name="username" autocomplete="username" required />
+    <label for="password">Contraseña</label>
+    <input type="password" id="password" name="password" autocomplete="current-password" required />
+    <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+  </form>
+
+  <div class="hint-box safe">
+    <h2>Consulta segura</h2>
+    <pre><code>SELECT id, username, role FROM users
+WHERE username = %s AND password = %s</code></pre>
+    <p>El payload <code>admin' OR '1'='1' -- -</code> se trata como texto literal y no autentica.</p>
+  </div>
+</section>
+{% endblock %}

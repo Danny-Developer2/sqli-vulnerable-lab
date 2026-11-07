@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Buscador · SQLi Lab{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Buscador de productos</h1>
+  <p class="lead">
+    Escenario basado en errores: la respuesta muestra el error SQL real con fines educativos.
+  </p>
+
+  <form method="get" action="{{ url_for('scenarios.search') }}" class="form-inline">
+    <input type="text" id="q" name="q" placeholder="Buscar por nombre..." aria-label="Buscar" />
+    <button class="btn btn-primary" type="submit">Buscar</button>
+  </form>
+
+  <div class="hint-box">
+    <h2>Payload de demostración</h2>
+    <p>Un comilla simple provoca un error de sintaxis visible:</p>
+    <pre><code>SELECT id, name, price, stock FROM products
+WHERE name LIKE '%' '%'</code></pre>
+    <button class="chip" data-target="q" data-value="'">Insertar ' y buscar</button>
+  </div>
+</section>
+{% endblock %}

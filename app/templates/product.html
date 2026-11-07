@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Producto · SQLi Lab{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>Producto por ID</h1>
+  <p class="lead">
+    Escenarios basados en booleano y en tiempo. La respuesta cambia según el resultado
+    de la condición SQL inyectada.
+  </p>
+
+  <form method="get" action="{{ url_for('scenarios.product') }}" class="form-inline">
+    <input type="text" id="id" name="id" placeholder="ID de producto" aria-label="ID de producto" />
+    <button class="btn btn-primary" type="submit">Ver producto</button>
+  </form>
+
+  <div class="hint-box">
+    <h2>Payloads de demostración</h2>
+    <ul>
+      <li>Booleano verdadero: <code>1' AND '1'='1</code></li>
+      <li>Booleano falso: <code>1' AND '1'='2</code></li>
+      <li>Basado en tiempo: <code>1' AND SLEEP(5) -- -</code></li>
+    </ul>
+    <div class="chip-row">
+      <button class="chip" data-target="id" data-value="1' AND '1'='1">Booleano true</button>
+      <button class="chip" data-target="id" data-value="1' AND '1'='2">Booleano false</button>
+      <button class="chip" data-target="id" data-value="1' AND SLEEP(5) -- -">SLEEP(5)</button>
+    </div>
+  </div>
+</section>
+{% endblock %}

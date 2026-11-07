@@ -1,0 +1,4 @@
+# SQLi Vulnerable Lab - dependencias de la aplicación
+Flask==3.1.0
+PyMySQL==1.1.1
+gunicorn==23.0.0

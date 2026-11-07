@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · SQLi Lab{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>{{ title }}</h1>
+  <p class="lead">Resultado de la consulta SQL ejecutada en el servidor.</p>
+
+  <div class="sql-box">
+    <strong>Consulta SQL ejecutada:</strong>
+    <pre><code>{{ sql }}</code></pre>
+  </div>
+
+  {% if error %}
+    <div class="alert error-box">
+      <strong>Error SQL:</strong> {{ error }}
+    </div>
+  {% else %}
+    <p class="result-count">Resultados: <strong>{{ results|length }}</strong></p>
+
+    {% if results %}
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              {% for key in results[0].keys() %}
+                <th>{{ key }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in results %}
+              <tr>
+                {% for value in row.values() %}
+                  <td>{{ value }}</td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="empty-state">Sin resultados.</p>
+    {% endif %}
+  {% endif %}
+
+  <p>
+    <a class="btn" href="{{ request.referrer or url_for('scenarios.search') }}">Volver al escenario</a>
+  </p>
+</section>
+{% endblock %}
